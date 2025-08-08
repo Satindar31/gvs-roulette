@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   openGraph:{
     images: [
       {
-        url: "/registerBg.svg",
+        url: "https://gvs-roulette.vercel.app/registerBg.svg",
         width: 1200,
         height: 630,
         alt: "GVS Roulette - A thrilling roulette game experience",
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     images: [
       {
-        url: "/registerBg.svg",
+        url: "https://gvs-roulette.vercel.app/registerBg.svg",
         width: 1200,
         height: 630,
         alt: "GVS Roulette - A thrilling roulette game experience",
