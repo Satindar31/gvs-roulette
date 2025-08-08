@@ -1,0 +1,152 @@
+"use client";
+
+import * as React from "react";
+import { ChevronDownIcon } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Label } from "@/components/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Input } from "../ui/input";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+} from "@/components/ui/dropdown-menu";
+import { redirect } from "next/navigation";
+import type { Session } from "next-auth";
+
+export function OnboardingForm({ session }: {session: Session}) {
+  const [open, setOpen] = React.useState(false);
+  const [date, setDate] = React.useState<Date | undefined>(undefined);
+
+  const [name, setName] = React.useState("");
+
+  const [grade, setGrade] = React.useState("");
+
+  const finalYear = new Date().getFullYear() - 15; // Assuming the user is at least 17 years old
+  // Get 31 december of finalYear and make it a new variable
+  const endMonth = new Date(finalYear, 11, 31);
+
+  console.log("Session user ID:", session.user);
+
+
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    // Handle form submission logic here
+    console.log("Selected date:", date);
+    console.log("Entered name:", name);
+    console.log("Selected grade:", grade);
+    fetch("/api/onboarding", {
+      cache: "no-store",
+      method: "POST",
+      body: JSON.stringify({
+        dob: date,
+        name: name,
+        grade: grade,
+        email: session.user?.email,
+      }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          // Redirect to the next page or show success message
+          redirect("/app/home"); // Change this to your desired redirect URL
+        } else {
+          // Handle error response
+          console.error("Error submitting form:", response.status);
+          if (response.status === 409) {
+            console.error("User already exists");
+            window.location.href = "/app/home"; // Redirect to home if user already exists
+          } else {
+            console.error("Error submitting form:", response.statusText);
+          }
+        }
+      })
+      .catch((error) => {
+        // Handle network or other errors
+        console.error("Network error:", error);
+      });
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="flex flex-row items-center gap-4">
+      <div className="flex flex-col gap-3">
+        <Label htmlFor="date" className="px-1">
+          Date of birth
+        </Label>
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              id="date"
+              className="w-48 justify-between font-normal"
+            >
+              {date ? date.toLocaleDateString() : "Select date"}
+              <ChevronDownIcon />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+            <Calendar
+              mode="single"
+              endMonth={endMonth}
+              selected={date}
+              captionLayout="dropdown"
+              onSelect={(date) => {
+                setDate(date);
+                setOpen(false);
+              }}
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
+
+      <div className="flex flex-col gap-3">
+        <Label htmlFor="name" className="px-1">
+          Name
+        </Label>
+        <Input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          type="text"
+          id="name"
+          name="name"
+          placeholder="Enter your name"
+          required
+          className="min-w-md"
+        />
+      </div>
+
+      <div>
+        <Label htmlFor="class" className="px-1 pb-3">
+          Class
+        </Label>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline">{grade ?? "Select"}</Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56">
+            <DropdownMenuLabel>Select your grade</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuRadioGroup value={grade} onValueChange={setGrade}>
+              <DropdownMenuRadioItem value="9">9</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="10">10</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="11">11</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="12">12</DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+      <Button variant="outline" type="submit" className="px-1 mt-6 w-1/4">
+        Submit
+      </Button>
+    </form>
+  );
+}
