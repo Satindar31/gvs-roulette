@@ -1,12 +1,16 @@
 import { auth } from "@/auth";
 import { AppSidebar } from "@/components/app-sidebar";
+import { Button } from "@/components/ui/button";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { Tooltip, TooltipContent } from "@/components/ui/tooltip";
+import { TooltipTrigger } from "@radix-ui/react-tooltip";
 
 import { SessionProvider } from "next-auth/react";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export default async function Home() {
@@ -37,10 +41,14 @@ export default async function Home() {
             </div>
           </header>
           <div className="flex flex-col justify-between p-4 pt-0 w-full h-full min-h-[calc(100vh-4rem)]">
-            <div className="flex-1 flex items-center justify-center">
-              <h1 className="text-4xl sm:text-6xl font-bold text-center">
-                {greeting}, {session?.user?.name || "Guest"}!
+            <div className="flex-1 flex flex-col items-center justify-center gap-8">
+              <h1 className="text-4xl sm:text-6xl font-bold text-center text-zinc-900">
+                {greeting}, {session?.user?.name.split(" ")[0] || "Guest"}!
               </h1>
+              <div className="flex flex-row gap-6">
+                  <Button asChild><Link href={"/app/playground/roulette"}>Start gambling</Link></Button>
+                  <Tooltip><TooltipTrigger><Button disabled variant="outline">View history</Button></TooltipTrigger><TooltipContent>This feature is coming soon!</TooltipContent></Tooltip>
+                </div>
             </div>
             <footer className="text-sm text-gray-500 text-center pb-4">
               This is a demo project. No money is deducted/added.

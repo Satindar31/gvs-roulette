@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { redirect } from "next/navigation";
 import type { Session } from "next-auth";
+import { toast } from "sonner";
 
 export function OnboardingForm({ session }: {session: Session}) {
   const [open, setOpen] = React.useState(false);
@@ -36,15 +37,9 @@ export function OnboardingForm({ session }: {session: Session}) {
   // Get 31 december of finalYear and make it a new variable
   const endMonth = new Date(finalYear, 11, 31);
 
-  console.log("Session user ID:", session.user);
-
-
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     // Handle form submission logic here
-    console.log("Selected date:", date);
-    console.log("Entered name:", name);
-    console.log("Selected grade:", grade);
     fetch("/api/onboarding", {
       cache: "no-store",
       method: "POST",
@@ -58,14 +53,18 @@ export function OnboardingForm({ session }: {session: Session}) {
       .then((response) => {
         if (response.ok) {
           // Redirect to the next page or show success message
+          toast.success("Form submitted successfully!");
           redirect("/app/home"); // Change this to your desired redirect URL
         } else {
           // Handle error response
           console.error("Error submitting form:", response.status);
+          toast.error("Failed to submit form, please try again.");
           if (response.status === 409) {
             console.error("User already exists");
+            toast.error("User already exists");
             window.location.href = "/app/home"; // Redirect to home if user already exists
           } else {
+            toast.error("Failed to submit form, please try again.");
             console.error("Error submitting form:", response.statusText);
           }
         }

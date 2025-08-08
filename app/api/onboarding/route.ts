@@ -6,7 +6,7 @@ export async function POST(request: Request) {
   if (!name || !dob || !grade || !email) {
     return new Response("Missing required fields", { status: 400 });
   }
-  console.log("Received onboarding data:", { name, dob, grade, email });
+
   try {
     const user = await prisma.user.create({
       data: {
