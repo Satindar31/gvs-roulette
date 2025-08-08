@@ -1,19 +1,13 @@
 import { auth } from "@/auth";
 import { AppSidebar } from "@/components/app-sidebar";
-import { SidebarProvider } from "@/components/ui/sidebar";
-
 import {
-  BookOpen,
-  Bot,
-  Frame,
-  Map,
-  PieChart,
-  Settings2,
-  SquareTerminal,
-} from "lucide-react";
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
+
 import { SessionProvider } from "next-auth/react";
-import { redirect, RedirectType } from "next/navigation";
-import { Suspense } from "react";
+import { redirect } from "next/navigation";
 
 export default async function Home() {
   const session = await auth();
@@ -29,138 +23,31 @@ export default async function Home() {
   }
 
   if (session?.user?.name == null) {
-    redirect("/app/onboarding", RedirectType.replace);
+    redirect("/app/onboarding");
   }
 
-  const data = {
-    user: {
-      name: session?.user?.name || "Guest",
-      email: session?.user?.email || "guest@example.com",
-      avatar: session?.user?.image || "/avatars/default.jpg",
-    },
-    navMain: [
-      {
-        title: "Playground",
-        url: "#",
-        icon: SquareTerminal,
-        isActive: true,
-        items: [
-          {
-            title: "History",
-            url: "#",
-          },
-          {
-            title: "Starred",
-            url: "#",
-          },
-          {
-            title: "Settings",
-            url: "#",
-          },
-        ],
-      },
-      {
-        title: "Models",
-        url: "#",
-        icon: Bot,
-        items: [
-          {
-            title: "Genesis",
-            url: "#",
-          },
-          {
-            title: "Explorer",
-            url: "#",
-          },
-          {
-            title: "Quantum",
-            url: "#",
-          },
-        ],
-      },
-      {
-        title: "Documentation",
-        url: "#",
-        icon: BookOpen,
-        items: [
-          {
-            title: "Introduction",
-            url: "#",
-          },
-          {
-            title: "Get Started",
-            url: "#",
-          },
-          {
-            title: "Tutorials",
-            url: "#",
-          },
-          {
-            title: "Changelog",
-            url: "#",
-          },
-        ],
-      },
-      {
-        title: "Settings",
-        url: "#",
-        icon: Settings2,
-        items: [
-          {
-            title: "General",
-            url: "#",
-          },
-          {
-            title: "Team",
-            url: "#",
-          },
-          {
-            title: "Billing",
-            url: "#",
-          },
-          {
-            title: "Limits",
-            url: "#",
-          },
-        ],
-      },
-    ],
-    projects: [
-      {
-        name: "Design Engineering",
-        url: "#",
-        icon: Frame,
-      },
-      {
-        name: "Sales & Marketing",
-        url: "#",
-        icon: PieChart,
-      },
-      {
-        name: "Travel",
-        url: "#",
-        icon: Map,
-      },
-    ],
-  };
-
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <Suspense fallback={<p>Loading...</p>}>
-        <SidebarProvider>
-          <SessionProvider>
-            <AppSidebar />
-          </SessionProvider>
-        </SidebarProvider>
-      </Suspense>
-
-      <h1 className="text-4xl font-bold">
-        {greeting}, {session?.user?.name || "Guest"}!
-      </h1>
-
-      <footer className="text-sm text-gray-500">
-        This is a demo project. No money is deducted/added.
-      </footer>
-    </div>
+    <SessionProvider>
+      <SidebarProvider>
+        <AppSidebar />
+        <SidebarInset>
+          <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+            <div className="flex items-center gap-2 px-4">
+              <SidebarTrigger className="-ml-1" />
+            </div>
+          </header>
+          <div className="flex flex-col justify-between p-4 pt-0 w-full h-full min-h-[calc(100vh-4rem)]">
+            <div className="flex-1 flex items-center justify-center">
+              <h1 className="text-4xl sm:text-6xl font-bold text-center">
+                {greeting}, {session?.user?.name || "Guest"}!
+              </h1>
+            </div>
+            <footer className="text-sm text-gray-500 text-center pb-4">
+              This is a demo project. No money is deducted/added.
+            </footer>
+          </div>
+        </SidebarInset>
+      </SidebarProvider>
+    </SessionProvider>
   );
 }

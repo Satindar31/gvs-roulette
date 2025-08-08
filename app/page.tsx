@@ -10,7 +10,7 @@ export default async function Home() {
   const session = await auth();
   return (
     <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <div className="text-9xl font-extrabold">GVS Roulette</div>
+      <div className="text-5xl lg:text-9xl font-extrabold text-center mt-4">GVS Roulette</div>
       <div className="flex flex-col items-center gap-8">
         {/* <Image
           src="/roulette.png"

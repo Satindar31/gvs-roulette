@@ -4,13 +4,21 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 export default function ComingSoon() {
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
-      <h1 className="text-7xl font-extrabold text-zinc-800 drop-shadow-lg">Coming Soon</h1>
-      <p className="mt-4 text-lg text-black drop-shadow-md">We&apos;re working hard to get this page ready for you.</p>
-      <Button variant="link" asChild>
-        <Link href="/">Go back home</Link>
-      </Button>
+      {/* Add a Russian Roulette wheel */}
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-64 h-64 border-8 border-dashed border-gray-300 rounded-full animate-spin"></div>
+        </div>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-32 h-32 border-8 border-dashed border-gray-400 rounded-full animate-spin"></div>
+        </div>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-16 h-16 border-8 border-dashed border-gray-500 rounded-full animate-spin"></div>
+        </div>
+      </div>
     </div>
   );
 }
