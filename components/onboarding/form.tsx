@@ -54,7 +54,7 @@ export function OnboardingForm({ session }: {session: Session}) {
         if (response.ok) {
           // Redirect to the next page or show success message
           toast.success("Form submitted successfully!");
-          redirect("/app/home"); // Change this to your desired redirect URL
+          window.location.href = "/app/home"; // Redirect to home after successful submission
         } else {
           // Handle error response
           console.error("Error submitting form:", response.status);
@@ -143,7 +143,7 @@ export function OnboardingForm({ session }: {session: Session}) {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <Button variant="outline" type="submit" className="px-1 mt-6 w-1/4">
+      <Button data-umami-event="Onboarding submit button" variant="outline" type="submit" className="px-1 mt-6 w-1/4">
         Submit
       </Button>
     </form>

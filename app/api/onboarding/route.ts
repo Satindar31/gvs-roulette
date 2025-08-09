@@ -12,7 +12,11 @@ export async function POST(request: Request) {
       data: {
         name,
         dob: new Date(dob),
-        grade: Number(grade),
+        grade: {
+          connect: {
+            grade: Number(grade),
+          },
+        },
         email,
       },
     });
@@ -24,6 +28,7 @@ export async function POST(request: Request) {
     if (error.code === 'P2002') {
       return new Response("User already exists", { status: 409 });
     }
+    console.error("Error creating user:", error);
     return new Response("Internal Server Error", { status: 500 });
   }
 }

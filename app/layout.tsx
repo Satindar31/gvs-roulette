@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-import { Toaster } from 'sonner'
+import { Toaster } from "sonner";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
   title: "GVS Roulette",
   description: "A thrilling roulette game experience",
   keywords: ["roulette", "gambling", "casino"],
-  openGraph:{
+  openGraph: {
     images: [
       {
         url: "https://gvs-roulette.vercel.app/registerBg.svg",
@@ -38,7 +39,7 @@ export const metadata: Metadata = {
         alt: "GVS Roulette - A thrilling roulette game experience",
       },
     ],
-  }
+  },
 };
 
 export default function RootLayout({
@@ -51,7 +52,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Toaster />
+        <Script
+          src={process.env.UMAMI_HOST}
+          data-website-id={process.env.UMAMI_WEBSITE_ID}
+          strategy="afterInteractive"
+        />
+        <Toaster richColors/>
         {children}
       </body>
     </html>

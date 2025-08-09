@@ -6,8 +6,11 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { Tooltip, TooltipContent } from "@/components/ui/tooltip";
-import { TooltipTrigger } from "@radix-ui/react-tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 import { SessionProvider } from "next-auth/react";
 import Link from "next/link";
@@ -43,12 +46,19 @@ export default async function Home() {
           <div className="flex flex-col justify-between p-4 pt-0 w-full h-full min-h-[calc(100vh-4rem)]">
             <div className="flex-1 flex flex-col items-center justify-center gap-8">
               <h1 className="text-4xl sm:text-6xl font-bold text-center text-zinc-900">
-                {greeting}, {session?.user?.name.split(" ")[0] || "Guest"}!
+                {greeting}, {session.user.name.split(" ")[0] ?? "Guest"}!
               </h1>
               <div className="flex flex-row gap-6">
-                  <Button asChild><Link href={"/app/playground/roulette"}>Start gambling</Link></Button>
-                  <Tooltip><TooltipTrigger><Button disabled variant="outline">View history</Button></TooltipTrigger><TooltipContent>This feature is coming soon!</TooltipContent></Tooltip>
-                </div>
+                <Button asChild>
+                  <Link href={"/app/playground/roulette"}>Start gambling</Link>
+                </Button>
+                <Tooltip>
+                  <TooltipTrigger className="w-fit px-4 py-1 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50">
+                    View history
+                  </TooltipTrigger>
+                  <TooltipContent>This feature is coming soon!</TooltipContent>
+                </Tooltip>
+              </div>
             </div>
             <footer className="text-sm text-gray-500 text-center pb-4">
               This is a demo project. No money is deducted/added.

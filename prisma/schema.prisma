@@ -1,11 +1,63 @@
 datasource db {
-    provider          = "postgresql"
-    url               = env("DATABASE_URL")
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
     // shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 generator client {
     provider = "prisma-client-js"
+}
+
+model Grade {
+    grade    Int    @id
+    students User[]
+
+    Question Question[]
+
+    subjects GradeToSubject[]
+}
+
+model Subject {
+    id      Int    @id @default(autoincrement())
+    name    String
+
+    grades GradeToSubject[]
+    Question Question[]
+}
+
+model GradeToSubject {
+    grade     Grade    @relation(fields: [gradeId], references: [grade])
+    subject   Subject  @relation(fields: [subjectId], references: [id])
+    gradeId   Int
+    subjectId Int
+
+    @@id([gradeId, subjectId])
+}
+
+model Question {
+    id      Int     @id @default(autoincrement())
+    text    String
+    grade   Grade   @relation(fields: [gradeId], references: [grade])
+    subject Subject @relation(fields: [subjectId], references: [id])
+    set     Int     @default(0)
+
+    gradeId   Int
+    subjectId Int
+
+    Bet Bet[]
+}
+
+model Bet {
+    id        Int      @id @default(autoincrement())
+    userId    String
+    amount    Float
+    set       Int      @default(0)
+    question  Question @relation(fields: [questionId], references: [id])
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    questionId Int
+    user       User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
@@ -19,12 +71,17 @@ model User {
     // Optional for WebAuthn support
     Authenticator Authenticator[]
 
-    grade Int?
-    dob   DateTime?
+    gradeId Int?
+    grade   Grade?    @relation(fields: [gradeId], references: [grade])
+    dob     DateTime?
+    admin   Boolean   @default(false)
+    Bets    Bet[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
+
+// Auth stuff
 
 model Account {
     userId            String

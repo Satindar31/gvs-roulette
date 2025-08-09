@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "public"."User" ALTER COLUMN "dob" DROP NOT NULL,
-ALTER COLUMN "grade" DROP NOT NULL;
