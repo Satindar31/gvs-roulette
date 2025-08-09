@@ -49,7 +49,7 @@ export default async function Home() {
                 {greeting}, {session.user.name.split(" ")[0] ?? "Guest"}!
               </h1>
               <div className="flex flex-row gap-6">
-                <Button asChild>
+                <Button data-umami-event="Start gambling button" asChild>
                   <Link href={"/app/playground/roulette"}>Start gambling</Link>
                 </Button>
                 <Tooltip>
