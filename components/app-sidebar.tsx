@@ -92,8 +92,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         isActive: true,
         items: [
           {
-            title: "Roulette",
-            url: "/app/playground/roulette",
+            title: "Place bets",
+            url: "/app/bets",
           },
           {
             title: "TODO",
