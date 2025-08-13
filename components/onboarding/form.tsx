@@ -21,7 +21,6 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
 } from "@/components/ui/dropdown-menu";
-import { redirect } from "next/navigation";
 import type { Session } from "next-auth";
 import { toast } from "sonner";
 

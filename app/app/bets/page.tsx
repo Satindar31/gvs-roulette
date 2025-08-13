@@ -1,6 +1,9 @@
 import { auth } from "@/auth";
+import SubjectForm11 from "@/components/bets/classes/11";
+import SubjectForm from "@/components/bets/classes/subjects";
 import { prisma } from "@/prisma";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 import { toast } from "sonner";
 
 export default async function BetsPage() {
@@ -17,11 +20,11 @@ export default async function BetsPage() {
         },
         select: {
           grade: true,
-          
+          subjects: true,
         },
       });
 
-      return grade!.grade;
+      return grade;
     } catch (error) {
       console.error("Error fetching user grade:", error);
       toast.error("Failed to fetch user grade.");
@@ -31,7 +34,27 @@ export default async function BetsPage() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="texttext-2xl font-bold">Bets Page</h1>
+      <h1 className="text-3xl font-bold">Bets Page</h1>
+      {await fetchClass().then((grade) => {
+        
+        if (grade?.subjects.length === 0) {
+            return (
+                <Suspense fallback={<div>Loading...</div>}>
+                    <SubjectForm grade={grade!.grade!.grade} />
+                </Suspense>
+            )
+        }
+        else if (grade!.grade!.grade === 11) {
+            return (
+                <SubjectForm11 subjects={grade!.subjects} />
+            )
+        }
+        // else if (grade!.grade!.grade === 12) {
+        //     return (
+        //         <SubjectForm12 subjects={grade.subjects} />
+        //     )
+        // }
+      })}
     </div>
   );
 }

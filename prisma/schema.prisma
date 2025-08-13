@@ -18,16 +18,18 @@ model Grade {
 }
 
 model Subject {
-    id      Int    @id @default(autoincrement())
-    name    String
+    id   Int    @id @default(autoincrement())
+    name String
 
-    grades GradeToSubject[]
+    grades   GradeToSubject[]
     Question Question[]
+
+    User User[] @relation("UserSubjects")
 }
 
 model GradeToSubject {
-    grade     Grade    @relation(fields: [gradeId], references: [grade])
-    subject   Subject  @relation(fields: [subjectId], references: [id])
+    grade     Grade   @relation(fields: [gradeId], references: [grade])
+    subject   Subject @relation(fields: [subjectId], references: [id])
     gradeId   Int
     subjectId Int
 
@@ -71,11 +73,12 @@ model User {
     // Optional for WebAuthn support
     Authenticator Authenticator[]
 
-    gradeId Int?
-    grade   Grade?    @relation(fields: [gradeId], references: [grade])
-    dob     DateTime?
-    admin   Boolean   @default(false)
-    Bets    Bet[]
+    gradeId  Int?
+    grade    Grade?    @relation(fields: [gradeId], references: [grade])
+    dob      DateTime?
+    admin    Boolean   @default(false)
+    Bets     Bet[]
+    subjects Subject[] @relation("UserSubjects")
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
