@@ -44,7 +44,7 @@ export default function SubjectForm({ grade }: { grade: number }) {
 
   const [sSubjects, setSSubjects] = useState<typeof subjects>([]);
 
-  fetch(`http://localhost:3000/api/general/subjects?grade=${grade}`, {})
+  fetch(`/api/general/subjects?grade=${grade}`, {})
     .then((response) => response.json())
     .then((subjects) => {
       setSubjects(subjects);
