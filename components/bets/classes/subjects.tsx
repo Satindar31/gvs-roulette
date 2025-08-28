@@ -12,7 +12,8 @@ import {
   FormEvent,
   Suspense,
 } from "react";
-import { toast } from "sonner";
+import { toast, Toaster } from "sonner";
+import { useSession } from "next-auth/react"
 
 export default function SubjectForm({ grade }: { grade: number }) {
   const [subjects, setSubjects] = useState<
@@ -42,6 +43,8 @@ export default function SubjectForm({ grade }: { grade: number }) {
     }>
   >([]);
 
+  const { data: session } = useSession()
+
   const [sSubjects, setSSubjects] = useState<typeof subjects>([]);
 
   fetch(`/api/general/subjects?grade=${grade}`, {})
@@ -57,6 +60,21 @@ export default function SubjectForm({ grade }: { grade: number }) {
       "Subjects selected: " +
         sSubjects.map((subject) => subject.name).join(", ")
     );
+
+    const res = fetch("/api/general/subjects", {
+      method: "POST",
+      body: JSON.stringify({
+        subjects: sSubjects,
+        email: session?.user?.email
+      }),
+    }).then((response) => response.json());
+
+    toast.promise(res, {
+      success: (resp: { subjects: [] }) => {
+        return `Successfully saved subjects ${resp.subjects.join(", ")}.`
+      },
+      error: "Failed to save subjects.",
+    });
   }
   return (
     <form

@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import SubjectForm11 from "@/components/bets/classes/11";
 import SubjectForm from "@/components/bets/classes/subjects";
 import { prisma } from "@/prisma";
+import { SessionProvider } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { toast } from "sonner";
@@ -39,9 +40,11 @@ export default async function BetsPage() {
         
         if (grade?.subjects.length === 0) {
             return (
+              <SessionProvider>
                 <Suspense fallback={<div>Loading...</div>}>
                     <SubjectForm grade={grade!.grade!.grade} />
                 </Suspense>
+              </SessionProvider>
             )
         }
         else if (grade!.grade!.grade === 11) {
