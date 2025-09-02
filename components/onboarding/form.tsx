@@ -1,31 +1,56 @@
 "use client";
 
 import * as React from "react";
-import { ChevronDownIcon } from "lucide-react";
+import { Check, ChevronDownIcon, ChevronsUpDown } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Label } from "@/components/ui/label";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { Label } from "@/components/ui/label";
 import { Input } from "../ui/input";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-} from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 import type { Session } from "next-auth";
 import { toast } from "sonner";
 
-export function OnboardingForm({ session }: {session: Session}) {
+const frameworks = [
+  {
+    value: 12,
+    label: 12,
+  },
+  {
+    value: 11,
+    label: 11,
+  },
+  // {
+  //   value: 10,
+  //   label: 10,
+  // },
+  // {
+  //   value: 9,
+  //   label: 9,
+  // },
+  // {
+  //   value: 8,
+  //   label: 8,
+  // },
+];
+
+export function OnboardingForm({ session }: { session: Session }) {
   const [open, setOpen] = React.useState(false);
+  const [gradeOpen, setGradeOpen] = React.useState(false);
+
   const [date, setDate] = React.useState<Date | undefined>(undefined);
 
   const [name, setName] = React.useState("");
@@ -37,6 +62,7 @@ export function OnboardingForm({ session }: {session: Session}) {
   const endMonth = new Date(finalYear, 11, 31);
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    toast.loading("Submitting...");
     event.preventDefault();
     // Handle form submission logic here
     fetch("/api/onboarding", {
@@ -126,23 +152,59 @@ export function OnboardingForm({ session }: {session: Session}) {
         <Label htmlFor="class" className="px-1 pb-3">
           Class
         </Label>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline">{grade ?? "Select"}</Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56">
-            <DropdownMenuLabel>Select your grade</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuRadioGroup value={grade} onValueChange={setGrade}>
-              <DropdownMenuRadioItem value="9">9</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="10">10</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="11">11</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="12">12</DropdownMenuRadioItem>
-            </DropdownMenuRadioGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Popover open={gradeOpen} onOpenChange={setGradeOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={open}
+              className="w-[200px] justify-between"
+            >
+              {grade
+                ? frameworks.find((framework) => framework.value === Number(grade))
+                    ?.label
+                : "Select framework..."}
+              <ChevronsUpDown className="opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[200px] p-0">
+            <Command>
+              <CommandInput placeholder="Search framework..." className="h-9" />
+              <CommandList>
+                <CommandEmpty>No framework found.</CommandEmpty>
+                <CommandGroup>
+                  {frameworks.map((framework) => (
+                    <CommandItem
+                      key={framework.value}
+                      value={framework.value.toString()}
+                      onSelect={(currentValue) => {
+                        setGrade(currentValue === grade ? "" : currentValue);
+                        setGradeOpen(false);
+                      }}
+                    >
+                      {framework.label}
+                      <Check
+                        className={cn(
+                          "ml-auto",
+                          Number(grade) === framework.value
+                            ? "opacity-100"
+                            : "opacity-0"
+                        )}
+                      />
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
       </div>
-      <Button data-umami-event="Onboarding submit button" variant="outline" type="submit" className="px-1 mt-6 w-1/4">
+      <Button
+        data-umami-event="Onboarding submit button"
+        variant="outline"
+        type="submit"
+        className="px-1 mt-6 w-1/4"
+      >
         Submit
       </Button>
     </form>

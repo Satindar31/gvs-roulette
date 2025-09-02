@@ -14,7 +14,7 @@ export async function POST(request: Request) {
         dob: new Date(dob),
         grade: {
           connect: {
-            grade: Number(grade),
+            grade: Number(grade)
           },
         },
         email,

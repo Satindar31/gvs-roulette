@@ -37,7 +37,7 @@ export default async function BetsPage() {
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold">Bets Page</h1>
       {await fetchClass().then((grade) => {
-        
+        console.log(grade?.grade)
         if (grade?.subjects.length === 0) {
             return (
               <SessionProvider>

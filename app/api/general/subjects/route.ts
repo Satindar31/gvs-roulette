@@ -30,7 +30,7 @@ export async function POST(req: Request) {
   const { subjects, email }: { subjects: []; email: string } = await req.json();
 
   const session = await auth();
-  if (email == session?.user?.email) {
+  if (email !== session?.user?.email) {
     return new NextResponse(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
     });

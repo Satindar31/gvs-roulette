@@ -11,8 +11,9 @@ import {
   useState,
   FormEvent,
   Suspense,
+  useEffect,
 } from "react";
-import { toast, Toaster } from "sonner";
+import { toast } from "sonner";
 import { useSession } from "next-auth/react"
 
 export default function SubjectForm({ grade }: { grade: number }) {
@@ -47,11 +48,13 @@ export default function SubjectForm({ grade }: { grade: number }) {
 
   const [sSubjects, setSSubjects] = useState<typeof subjects>([]);
 
-  fetch(`/api/general/subjects?grade=${grade}`, {})
+  useEffect(() => {
+    fetch(`/api/general/subjects?grade=${grade}`, {})
     .then((response) => response.json())
     .then((subjects) => {
       setSubjects(subjects);
     });
+  }, [grade])
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
