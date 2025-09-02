@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "GVS Roulette",
+  title: "Paper Bazaar",
   description: "A thrilling roulette game experience",
   keywords: ["roulette", "gambling", "casino"],
   openGraph: {
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
         url: "https://gvs-roulette.vercel.app/registerBg.svg",
         width: 1200,
         height: 630,
-        alt: "GVS Roulette - A thrilling roulette game experience",
+        alt: "PaperBazaar - A thrilling roulette game experience",
       },
     ],
   },
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
         url: "https://gvs-roulette.vercel.app/registerBg.svg",
         width: 1200,
         height: 630,
-        alt: "GVS Roulette - A thrilling roulette game experience",
+        alt: "PaperBazaar - A thrilling roulette game experience",
       },
     ],
   },

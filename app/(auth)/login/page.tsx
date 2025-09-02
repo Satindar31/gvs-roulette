@@ -14,7 +14,7 @@ export default function LoginPage() {
             <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
               <GalleryVerticalEnd className="size-4" />
             </div>
-            GVS Roulette
+            PaperBazaar
           </a>
           <p className="text-sm">Illustration by <Button variant="link" asChild size="sm" className="p-0"><Link href="https://unsplash.com/@dilettadavolio?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Diletta Davolio</Link></Button> on <Button variant="link" size="sm" className="p-0"><Link href="https://unsplash.com/illustrations/heres-a-caption-drawn-daisies-in-black-and-white-QTPv_54LSjQ?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</Link></Button></p>
 

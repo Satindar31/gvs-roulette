@@ -21,7 +21,7 @@ export default function RegisterPage() {
             <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
               <GalleryVerticalEnd className="size-4" />
             </div>
-            <p>GVS Roulette </p>
+            <p>PaperBazaar</p>
           </a>
           <p className="text-sm">Illustration by <Button variant="link" asChild size="sm" className="p-0"><Link href="https://unsplash.com/@andsproject?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">ands</Link></Button> on <Button variant="link" size="sm" className="p-0"><Link href="https://unsplash.com/illustrations/girl-reaches-for-the-moon-in-a-dreamy-night-sky--ZVXDrYaN8o?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</Link></Button></p>
         </div>
