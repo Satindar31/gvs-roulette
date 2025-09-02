@@ -24,7 +24,7 @@ import { cn } from "@/lib/utils";
 import type { Session } from "next-auth";
 import { toast } from "sonner";
 
-const frameworks = [
+const grades = [
   {
     value: 12,
     label: 12,
@@ -54,6 +54,7 @@ export function OnboardingForm({ session }: { session: Session }) {
   const [date, setDate] = React.useState<Date | undefined>(undefined);
 
   const [name, setName] = React.useState("");
+  const [code, setCode] = React.useState("");
 
   const [grade, setGrade] = React.useState("");
 
@@ -62,46 +63,53 @@ export function OnboardingForm({ session }: { session: Session }) {
   const endMonth = new Date(finalYear, 11, 31);
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    toast.loading("Submitting...");
     event.preventDefault();
-    // Handle form submission logic here
-    fetch("/api/onboarding", {
-      cache: "no-store",
-      method: "POST",
-      body: JSON.stringify({
-        dob: date,
-        name: name,
-        grade: grade,
-        email: session.user?.email,
-      }),
-    })
-      .then((response) => {
-        if (response.ok) {
-          // Redirect to the next page or show success message
-          toast.success("Form submitted successfully!");
-          window.location.href = "/app/home"; // Redirect to home after successful submission
-        } else {
-          // Handle error response
-          console.error("Error submitting form:", response.status);
-          toast.error("Failed to submit form, please try again.");
-          if (response.status === 409) {
-            console.error("User already exists");
-            toast.error("User already exists");
-            window.location.href = "/app/home"; // Redirect to home if user already exists
-          } else {
-            toast.error("Failed to submit form, please try again.");
-            console.error("Error submitting form:", response.statusText);
-          }
-        }
+    if (code == process.env.NEXT_PUBLIC_JOIN_CODE) {
+      toast.loading("Submitting...");
+      // Handle form submission logic here
+      fetch("/api/onboarding", {
+        cache: "no-store",
+        method: "POST",
+        body: JSON.stringify({
+          dob: date,
+          name: name,
+          grade: grade,
+          email: session.user?.email,
+        }),
       })
-      .catch((error) => {
-        // Handle network or other errors
-        console.error("Network error:", error);
-      });
+        .then((response) => {
+          if (response.ok) {
+            // Redirect to the next page or show success message
+            toast.success("Form submitted successfully!");
+            window.location.href = "/app/home"; // Redirect to home after successful submission
+          } else {
+            // Handle error response
+            console.error("Error submitting form:", response.status);
+            toast.error("Failed to submit form, please try again.");
+            if (response.status === 409) {
+              console.error("User already exists");
+              toast.error("User already exists");
+              window.location.href = "/app/home"; // Redirect to home if user already exists
+            } else {
+              toast.error("Failed to submit form, please try again.");
+              console.error("Error submitting form:", response.statusText);
+            }
+          }
+        })
+        .catch((error) => {
+          // Handle network or other errors
+          console.error("Network error:", error);
+        });
+    } else {
+      toast.error("Invalid join code");
+    }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-row items-center gap-4">
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-row items-center justify-center gap-4"
+    >
       <div className="flex flex-col gap-3">
         <Label htmlFor="date" className="px-1">
           Date of birth
@@ -119,6 +127,7 @@ export function OnboardingForm({ session }: { session: Session }) {
           </PopoverTrigger>
           <PopoverContent className="w-auto overflow-hidden p-0" align="start">
             <Calendar
+              required
               mode="single"
               endMonth={endMonth}
               selected={date}
@@ -148,6 +157,22 @@ export function OnboardingForm({ session }: { session: Session }) {
         />
       </div>
 
+      <div className="flex flex-col gap-3">
+        <Label htmlFor="code" className="px-1">
+          Join Code
+        </Label>
+        <Input
+          value={code}
+          onChange={(e) => setCode(e.target.value)}
+          type="password"
+          id="code"
+          name="code"
+          placeholder="Enter the join code"
+          required
+          className="w-48" // Match width with others
+        />
+      </div>
+
       <div>
         <Label htmlFor="class" className="px-1 pb-3">
           Class
@@ -161,32 +186,36 @@ export function OnboardingForm({ session }: { session: Session }) {
               className="w-[200px] justify-between"
             >
               {grade
-                ? frameworks.find((framework) => framework.value === Number(grade))
+                ? grades.find((gradeItem) => gradeItem.value === Number(grade))
                     ?.label
-                : "Select framework..."}
+                : "Select grade"}
               <ChevronsUpDown className="opacity-50" />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-[200px] p-0">
             <Command>
-              <CommandInput placeholder="Search framework..." className="h-9" />
+              <CommandInput
+                required
+                placeholder="Search grade..."
+                className="h-9"
+              />
               <CommandList>
-                <CommandEmpty>No framework found.</CommandEmpty>
+                <CommandEmpty>No grade found.</CommandEmpty>
                 <CommandGroup>
-                  {frameworks.map((framework) => (
+                  {grades.map((gradeItem) => (
                     <CommandItem
-                      key={framework.value}
-                      value={framework.value.toString()}
+                      key={gradeItem.value}
+                      value={gradeItem.value.toString()}
                       onSelect={(currentValue) => {
                         setGrade(currentValue === grade ? "" : currentValue);
                         setGradeOpen(false);
                       }}
                     >
-                      {framework.label}
+                      {gradeItem.label}
                       <Check
                         className={cn(
                           "ml-auto",
-                          Number(grade) === framework.value
+                          Number(grade) === gradeItem.value
                             ? "opacity-100"
                             : "opacity-0"
                         )}
