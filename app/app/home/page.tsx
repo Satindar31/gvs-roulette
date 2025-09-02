@@ -62,6 +62,14 @@ export default async function Home() {
             </div>
             <footer className="text-sm text-gray-500 text-center pb-4">
               This is a demo project. No money is deducted/added.
+              <iframe
+                src="https://paperbazaar.instatus.com/embed-status/adec06c2/light-md"
+                width="230"
+                height="61"
+                frameBorder="0"
+                scrolling="no"
+                style={{ border: "none" }}
+              ></iframe>
             </footer>
           </div>
         </SidebarInset>

@@ -57,7 +57,8 @@ export default function RootLayout({
           data-website-id={process.env.UMAMI_WEBSITE_ID}
           strategy="afterInteractive"
         />
-        <Toaster richColors/>
+        <Script src="https://api.instatus.com/widget?host=paperbazaar.instatus.com&code=adec06c2&locale=en" strategy="afterInteractive" />
+        <Toaster richColors />
         {children}
       </body>
     </html>
