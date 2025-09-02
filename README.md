@@ -1,36 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎓 PaperBazaar  
+*A parody exam-topic prediction & betting platform*  
 
-## Getting Started
+![PaperBazaar Banner](https://github.com/user-attachments/assets/a240eeb3-12a7-4cb5-aaff-e6f338fa6ea8)
 
-First, run the development server:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📖 About  
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**PaperBazaar** is a tongue-in-cheek, parody platform where students "bet" virtual credits on which topics will appear in the final exam.  
+Think of it as **fantasy cricket**, but for your **syllabus**.  
 
-## Learn More
+⚠️ *Disclaimer: This is purely educational and satirical. No real money, no actual gambling.*  
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## ✨ Features  
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- [ ] 💰 **DimagCoins** — our in-house parody currency.  
+- [ ] 📜 **Topic Betting** — choose from the syllabus, wager your coins.  
+- [ ] 🔍 **OCR-Powered Checking** — upload scanned exam papers, system auto-verifies which topics appeared.  
+- [ ] 💸 **Automatic Payouts** — winners get multipliers, losers cry.  
+- [ ] 🏆 **Leaderboard** — track the "Exam Whisperers" vs the "AndhaGuess Champs".  
+- [ ] 🎭 **Parody Vibes** — fun names, meme-worthy results, and startup-style branding.  
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🛠️ Tech Stack  
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Frontend** → Next.js + TailwindCSS  
+- **Backend** → Next.js 
+- **Database** → PostgreSQL  
+- **OCR Engine** → [Tesseract.js](https://tesseract.projectnaptha.com/)  
+- **Hosting** → Vercel
+
+---
+
+## 🔮 Workflow  
+
+1. **Betting Phase** 🎲  
+   - Students get `15000 DimagCoins`.  
+   - Bet on topics they believe will appear.  
+
+2. **Exam Phase** 📄✍️  
+   - Admin uploads scanned exam paper after exams.
+
+   - OCR extracts text and checks against syllabus keywords.  
+
+3. **Resolution Phase** 🎉  
+   - Payouts calculated automatically.  
+   - Leaderboard updated.  
+
+---
+
+## 📷 Demo Screenshots  
+
+*(coming soon — once the frontend stops looking like me)*  
+
+---
+
+## 🚨 Disclaimer  
+
+PaperBazaar is a **satirical educational project** built for fun.  
+- No real gambling.  
+- No actual currency.  
+
+---
+
+## 👨‍💻 Author  
+
+Made with ☕, 🤯, and a lot of "lab manual complete karni hai".  
+
