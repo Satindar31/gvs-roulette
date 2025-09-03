@@ -2,23 +2,11 @@
 
 import * as React from "react";
 import {
-  AudioWaveform,
-  BookOpen,
-  Bot,
-  Command,
-  Frame,
-  GalleryVerticalEnd,
-  LucideIcon,
-  Map,
-  PieChart,
-  Settings2,
   Gamepad2Icon,
 } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
-import { NavProjects } from "@/components/nav-projects";
 import { NavUser } from "@/components/nav-user";
-import { TeamSwitcher } from "@/components/team-switcher";
 
 import { SessionProvider, useSession } from "next-auth/react";
 
@@ -26,38 +14,17 @@ import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import InsStatus from "./insstatus";
 
-// This is sample data.
 
-type data = {
-  user: {
-    name: string;
-    email: string;
-    avatar: string;
-  };
-  navMain: Array<{
-    title: string;
-    url: string;
-    icon: LucideIcon | undefined;
-    items: Array<{
-      title: string;
-      url: string;
-    }>;
-  }>;
-  projects: Array<{
-    name: string;
-    url: string;
-    icon: LucideIcon;
-  }>;
-};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { data: session } = useSession();
 
-  if(!session || !session.user) {
+
+  if (!session || !session.user) {
     return null;
   }
 
@@ -200,6 +167,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           {/* <NavProjects projects={data.projects} /> */}
         </SidebarContent>
         <SidebarFooter>
+            <InsStatus size="sm" />
           <NavUser user={data.user} />
         </SidebarFooter>
         <SidebarRail />

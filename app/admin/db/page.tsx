@@ -58,6 +58,7 @@ export default function DbAdminPage() {
       }} className="h-screen flex flex-col items-center justify-center">
         <Label className="font-normal mb-2">Enter the passcode</Label>
         <InputOTP
+        type="password"
           maxLength={6}
           value={pass}
           onChange={(value) => setPass(value)}

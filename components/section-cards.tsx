@@ -1,0 +1,130 @@
+import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react"
+
+import { Badge } from "@/components/ui/badge"
+import {
+  Card,
+  CardAction,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { DBSize, getTotalUserCount, githubStars, userChangeIn24Hours, usersInLast24Hours } from "@/hooks/admin/stats"
+import { Suspense } from "react"
+
+export async function SectionCards() {
+
+  const users = await getTotalUserCount()
+  const newUsers = await usersInLast24Hours()
+  const userChange = await userChangeIn24Hours()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const dbSize: any = await DBSize()
+
+  const GithubStars = await githubStars()
+
+  return (
+    <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
+      <Card className="@container/card">
+        <CardHeader>
+          <CardDescription>Total Users</CardDescription>
+          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+          <Suspense fallback={<div>Loading...</div>}>
+            {users}
+          </Suspense>
+          </CardTitle>
+          {/* <CardAction>
+            <Badge variant="outline">
+              <IconTrendingUp />
+              +12.5%
+            </Badge>
+          </CardAction> */}
+        </CardHeader>
+        <CardFooter className="flex-col items-start gap-1.5 text-sm">
+          {/* <div className="line-clamp-1 flex gap-2 font-medium">
+            Trending up this month <IconTrendingUp className="size-4" />
+          </div> */}
+          <div className="text-muted-foreground">
+            Total user count
+          </div>
+        </CardFooter>
+      </Card>
+      <Card className="@container/card">
+        <CardHeader>
+          <CardDescription>New Users</CardDescription>
+          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+          <Suspense fallback={<div>Loading...</div>}>
+            {newUsers}
+          </Suspense>
+          </CardTitle>
+          <CardAction>
+            <Badge variant="outline">
+              <Suspense fallback={<div>Loading...</div>}>
+                {userChange < 0 ? (
+                  <>
+                    <IconTrendingDown />
+                    {userChange}%
+                  </>
+              ) : (
+                <>
+                  <IconTrendingUp />
+                  {userChange}%
+                </>
+              )}
+              </Suspense>
+            </Badge>
+          </CardAction>
+        </CardHeader>
+        <CardFooter className="flex-col items-start gap-1.5 text-sm">
+          {/* <div className="line-clamp-1 flex gap-2 font-medium">
+            Down 20% this period <IconTrendingDown className="size-4" />
+          </div> */}
+          <div className="text-muted-foreground">
+            Users in last 24 hours
+          </div>
+        </CardFooter>
+      </Card>
+      <Card className="@container/card">
+        <CardHeader>
+          <CardDescription>Database Size</CardDescription>
+          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+            {dbSize[0].database_size}
+          </CardTitle>
+          {/* <CardAction>
+            <Badge variant="outline">
+              <IconTrendingUp />
+              +12.5%
+            </Badge>
+          </CardAction> */}
+        </CardHeader>
+        {/* <CardFooter className="flex-col items-start gap-1.5 text-sm">
+          <div className="line-clamp-1 flex gap-2 font-medium">
+            Strong user retention <IconTrendingUp className="size-4" />
+          </div>
+          <div className="text-muted-foreground">Engagement exceed targets</div>
+        </CardFooter> */}
+      </Card>
+      <Card className="@container/card">
+        <CardHeader>
+          <CardDescription>Github stars</CardDescription>
+          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+          <Suspense fallback={<div>Loading...</div>}>
+            {GithubStars}
+          </Suspense>
+          </CardTitle>
+          {/* <CardAction>
+            <Badge variant="outline">
+              <IconTrendingUp />
+              +4.5%
+            </Badge>
+          </CardAction> */}
+        </CardHeader>
+        {/* <CardFooter className="flex-col items-start gap-1.5 text-sm">
+          <div className="line-clamp-1 flex gap-2 font-medium">
+            Steady performance increase <IconTrendingUp className="size-4" />
+          </div>
+          <div className="text-muted-foreground">Meets growth projections</div>
+        </CardFooter> */}
+      </Card>
+    </div>
+  )
+}
