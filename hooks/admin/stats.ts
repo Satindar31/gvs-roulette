@@ -64,12 +64,12 @@ export async function DBSize() {
 export async function githubStars() {
     // get the amount of stars on satindar31/paperbazaar
     const response = await fetch("https://api.github.com/repos/satindar31/paperbazaar", {
-        cache: "no-cache",
+        cache: "force-cache",
         next: {
-            revalidate: 60, // revalidate every minute
+            revalidate: 60*60, // revalidate every hour
         }
     });
     const data = await response.json();
 
-    return data.stargazers_count;
+    return await data.stargazers_count;
 }
