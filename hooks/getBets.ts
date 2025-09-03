@@ -1,7 +1,6 @@
 import { prisma } from "@/prisma";
 import { Bet } from "@/types/bets";
 
-
 /**
  * Fetch bets by subject ID.
  * @param subjectID - The ID of the subject to fetch bets for.
@@ -20,10 +19,14 @@ export async function getBetsBySubjectID(subjectID: number): Promise<Bet[]> {
       include: {
         question: {
           include: {
-            subject: true
-          }
-        }
-      }
+            subject: true,
+          },
+        },
+      },
+      cacheStrategy: {
+        ttl: 60,
+        swr: 30,
+      },
     });
 
     return bets;

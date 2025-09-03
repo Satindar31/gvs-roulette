@@ -22,6 +22,10 @@ export async function GET(req: Request) {
     orderBy: {
       name: "asc",
     },
+    cacheStrategy: {
+      ttl: 3600,
+      swr: 180
+    }
   });
   return Response.json(subjects);
 }
