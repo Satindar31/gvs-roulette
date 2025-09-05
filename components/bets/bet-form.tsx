@@ -47,17 +47,15 @@ export default function BetForm({
   const [specifySet, setSpecifySet] = useState<boolean>(false);
   const [setId, setSetId] = useState<string>("");
 
-  // React.useEffect(() => {
-  //   if (typeof window !== "undefined") {
-  //     const params = new URLSearchParams(window.location.search);
-  //     setSearchParams(params);
-  //     setQuestionId(params.get("questionId") ?? "");
-  //   }
-  // }, []);
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      setQuestionId(params.get("questionId") ?? "");
+    }
+  }, []);
   const [submittedMsg, setSubmittedMsg] = useState<string>("");
   const [errorMsg, setErrorMsg] = useState<string>("");
 
-  const [open, setOpen] = useState(false);
 
   // Base payout multiplier is 2x; specifying the set doubles it to 4x
   const payoutMultiplier = specifySet ? 4 : 2;
