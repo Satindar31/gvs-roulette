@@ -4,34 +4,50 @@ import Link from "next/link";
 
 export default async function SubjectBetsGrid({ id }: { id: string }) {
   const data = await getBetsBySubjectID(Number(id));
-
+  console.log(data.length)
   return (
-    <div>
-      {data.length > 0 ? (
-        data.map((bet) => (
-            <>
-            <div key={bet.id} className="border rounded-lg m-4 p-4 col-span-1">
-              <h3 className="font-bold">{bet.question.text}</h3>
-              <p>Subject: {bet.question.subject.name}</p>
-            </div>
-            {data.indexOf(bet) === data.length - 1 && (
-              <Link href={`/app/bets/subject/${id}/new`}>
-              <Button className="m-4 h-24 text-4xl font-semibold cross" variant={"outline"}>
-                Place a new bet
-              </Button>
-              </Link>
-            )}
-            </>
-        ))
-      ) : (
-        <div className="col-span-4 text-center">
-          <h2 className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight pt-8 first:mt-0">
-            Be the first to place a bet!
-          </h2>
-          <Link href={`/app/bets/subject/${id}/new`}>
-            <Button variant={"outline"}>Place Bet</Button>
-          </Link>
+    <div className="w-full">
+    <div className="grid grid-cols-4 grid-rows-3 gap-4">
+      {data.length > 0 &&
+      data.slice(0, 11).map((bet) => (
+        <div
+        key={bet.id}
+        className="border rounded-lg p-4 flex flex-col justify-between"
+        >
+        <h3 className="font-bold">{bet.question.text}</h3>
+        <p>Subject: {bet.question.subject.name}</p>
         </div>
+      ))}
+      {data.length > 0 && (
+      <Link
+        href={`/app/bets/subject/${id}/new`}
+        className="flex items-center justify-center border rounded-lg"
+      >
+        <Button
+        className="h-24 w-full text-2xl font-semibold"
+        variant="outline"
+        >
+        Place a new bet
+        </Button>
+      </Link>
+      )}
+      {data.length === 0 &&
+      Array.from({ length: 11 }).map((_, i) => (
+        <div key={i} className="border rounded-lg p-4 opacity-0" />
+      ))}
+    </div>
+      {data.length === 0 && (
+      <Link
+        href={`/app/bets/subject/${id}/new`}
+        className="flex items-center justify-center mt-8"
+      >
+        <Button
+          className="h-24 w-full max-w-md mx-auto text-2xl font-semibold"
+          variant="outline"
+        >
+          🎲 Be the first to place a bet!
+        </Button>
+      </Link>
       )}
     </div>
   );

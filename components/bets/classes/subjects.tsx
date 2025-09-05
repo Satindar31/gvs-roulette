@@ -15,6 +15,7 @@ import {
 } from "react";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react"
+import { useRouter } from "next/navigation";
 
 export default function SubjectForm({ grade }: { grade: number }) {
   const [subjects, setSubjects] = useState<
@@ -46,6 +47,8 @@ export default function SubjectForm({ grade }: { grade: number }) {
 
   const { data: session } = useSession()
 
+  const router = useRouter()
+
   const [sSubjects, setSSubjects] = useState<typeof subjects>([]);
 
   useEffect(() => {
@@ -73,11 +76,14 @@ export default function SubjectForm({ grade }: { grade: number }) {
     }).then((response) => response.json());
 
     toast.promise(res, {
-      success: (resp: { subjects: [] }) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      success: (resp: any) => {
         return `Successfully saved subjects ${resp.subjects.join(", ")}.`
       },
       error: "Failed to save subjects.",
     });
+
+    router.refresh()   
   }
   return (
     <form

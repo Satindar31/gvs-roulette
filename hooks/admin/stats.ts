@@ -73,3 +73,13 @@ export async function githubStars() {
 
     return await data.stargazers_count;
 }
+
+export async function isUserAdmin(email:string | null | undefined) {
+    if (!email) return false;
+
+    const user = await prisma.user.findUnique({
+        where: { email },
+    });
+
+    return user?.admin;
+}

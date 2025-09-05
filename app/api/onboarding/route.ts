@@ -1,6 +1,6 @@
 import { prisma } from "@/prisma";
 
-export async function POST(request: Request) {
+export async function PUT(request: Request) {
   const { name, dob, grade, email } = await request.json();
 
   if (!name || !dob || !grade || !email) {
@@ -8,7 +8,8 @@ export async function POST(request: Request) {
   }
 
   try {
-    const user = await prisma.user.create({
+    const user = await prisma.user.update({
+      where: { email },
       data: {
         name,
         dob: new Date(dob),
@@ -17,7 +18,6 @@ export async function POST(request: Request) {
             grade: Number(grade)
           },
         },
-        email,
       },
     });
     return new Response(JSON.stringify(user), {

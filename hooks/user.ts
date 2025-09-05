@@ -13,9 +13,9 @@ export async function checkUserAdmin(session: Session | null) {
         email: session.user.email!.toString(),
       },
       cacheStrategy: {
-        ttl: 60*30,
-        swr: 60
-      }
+        ttl: 60 * 30,
+        swr: 60,
+      },
     });
 
     const admin = userPrisma?.admin;
@@ -30,5 +30,22 @@ export async function checkUserAdmin(session: Session | null) {
       isAdmin: false,
       user: null,
     };
+  }
+}
+
+export async function userDOBSet(session: Session | null) {
+  if (!session || !session.user) {
+    return false;
+  }
+  try {
+    const userPrisma = await prisma.user.findUnique({
+      where: {
+        email: session.user.email!.toString(),
+      },
+    });
+    return userPrisma?.dob != null;
+  } catch (error) {
+    console.error("Error checking user DOB status:", error);
+    return false;
   }
 }

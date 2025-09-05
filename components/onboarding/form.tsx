@@ -23,6 +23,7 @@ import { Input } from "../ui/input";
 import { cn } from "@/lib/utils";
 import type { Session } from "next-auth";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const grades = [
   {
@@ -62,6 +63,8 @@ export function OnboardingForm({ session }: { session: Session }) {
   // Get 31 december of finalYear and make it a new variable
   const endMonth = new Date(finalYear, 11, 31);
 
+  const router = useRouter();
+
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (code == process.env.NEXT_PUBLIC_JOIN_CODE) {
@@ -69,7 +72,7 @@ export function OnboardingForm({ session }: { session: Session }) {
       // Handle form submission logic here
       fetch("/api/onboarding", {
         cache: "no-store",
-        method: "POST",
+        method: "PUT",
         body: JSON.stringify({
           dob: date,
           name: name,
@@ -81,7 +84,7 @@ export function OnboardingForm({ session }: { session: Session }) {
           if (response.ok) {
             // Redirect to the next page or show success message
             toast.success("Form submitted successfully!");
-            window.location.href = "/app/home"; // Redirect to home after successful submission
+            router.push("/app/home"); // Redirect to home after successful submission
           } else {
             // Handle error response
             console.error("Error submitting form:", response.status);
@@ -89,7 +92,7 @@ export function OnboardingForm({ session }: { session: Session }) {
             if (response.status === 409) {
               console.error("User already exists");
               toast.error("User already exists");
-              window.location.href = "/app/home"; // Redirect to home if user already exists
+              router.push("/app/home"); // Redirect to home if user already exists
             } else {
               toast.error("Failed to submit form, please try again.");
               console.error("Error submitting form:", response.statusText);
@@ -98,6 +101,7 @@ export function OnboardingForm({ session }: { session: Session }) {
         })
         .catch((error) => {
           // Handle network or other errors
+          toast.error("Failed to submit form, please try again.");
           console.error("Network error:", error);
         });
     } else {

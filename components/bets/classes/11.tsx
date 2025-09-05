@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+import { useRouter } from "next/navigation";
 
 export default function SubjectForm11({
   subjects,
@@ -9,6 +9,7 @@ export default function SubjectForm11({
   subjects: { name: string; id: number }[];
 }) {
 
+  const router = useRouter()
 
   return (
     <form className="max-w-md mx-auto mt-8 p-8 rounded flex flex-col gap-6 justify-center items-center">
@@ -22,7 +23,7 @@ export default function SubjectForm11({
           <Button
             key={subject.id}
             type="button"
-            onClick={() => (location.href = `/app/bets/subject/${subject.id}`)}
+            onClick={() => router.push(`/app/bets/subject/${subject.id}`)}
             variant={"link"}
           >
             {subject.name}

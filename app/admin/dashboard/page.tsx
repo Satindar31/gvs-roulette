@@ -1,14 +1,25 @@
+import { auth } from "@/auth";
 import { AppSidebar } from "@/components/app-sidebar";
 import { ChartAreaInteractive } from "@/components/chart-area-interactive";
-import { DataTable } from "@/components/data-table";
 import { SectionCards } from "@/components/section-cards";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { isUserAdmin } from "@/hooks/admin/stats";
 
-import data from "./data.json";
 import { SessionProvider } from "next-auth/react";
+import { Suspense } from "react";
 
-export default function Page() {
+export default async function Page() {
+  const session = await auth()
+  const admin = await isUserAdmin(session?.user?.email);
+
+  if (!admin) {
+    return (
+      <div className="flex h-screen w-screen items-center justify-center">
+        <h1 className="text-2xl font-bold">Access Denied</h1>
+      </div>
+    );
+  }
   return (
     <SessionProvider>
       <SidebarProvider
@@ -25,9 +36,13 @@ export default function Page() {
           <div className="flex flex-1 flex-col">
             <div className="@container/main flex flex-1 flex-col gap-2">
               <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-                <SectionCards />
+                <Suspense fallback={<div>Loading...</div>}>
+                  <SectionCards />
+                </Suspense>
                 <div className="px-4 lg:px-6">
-                  <ChartAreaInteractive />
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <ChartAreaInteractive />
+                  </Suspense>
                 </div>
                 {/* <DataTable data={data} /> */}
               </div>
