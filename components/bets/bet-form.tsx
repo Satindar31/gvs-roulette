@@ -27,8 +27,8 @@ type Subject = { id: string; name: string };
 type QuestionMap = Record<string, { id: string; label: string }[]>;
 
 const SET_OPTIONS = [
-  { id: "A", label: "Set 1" },
-  { id: "B", label: "Set 2" },
+  { id: "1", label: "Set 1" },
+  { id: "2", label: "Set 2" },
   //   { id: "C", label: "Set C" },
   //   { id: "D", label: "Set D" },
 ];
