@@ -43,6 +43,7 @@ export async function userDOBSet(session: Session | null) {
         email: session.user.email!.toString(),
       },
     });
+    console.log("User DOB:", userPrisma?.dob);
     return userPrisma?.dob != null;
   } catch (error) {
     console.error("Error checking user DOB status:", error);

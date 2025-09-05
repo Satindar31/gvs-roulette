@@ -1,11 +1,11 @@
 import { auth, signIn } from "@/auth";
 import { OnboardingForm } from "@/components/onboarding/form";
+import { redirect } from "next/navigation";
 
 export default async function onboarding() {
   const session = await auth();
   if (!session) {
-    await signIn("", { redirectTo: "/app/onboarding" });
-    return null; // This will prevent rendering the page if the user is not authenticated
+    redirect("/login");
   }
   let greeting = "Welcome";
   const currentHour = new Date().getHours();

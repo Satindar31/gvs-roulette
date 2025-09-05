@@ -50,15 +50,20 @@ export default async function BetsPage({
         </p>
       </header>
 
-      <section className="mb-8">
-        <h2 className="sr-only">Selected Subject Subjects</h2>
-        <SubjectList subjects={[{ ...questions[0].subject, id: String(questions[0].subject.id) }]} selected={Number(id)} />
-      </section>
-
-      <section>
-        <h2 className="sr-only">Betting Form</h2>
-        <BetForm subjects={[{ ...questions[0].subject, id: String(questions[0].subject.id) }]} questionsBySubject={questionsOnSubject} />
-      </section>
+      {questions[0] && questions[0].subject ? (
+        <>
+          <section className="mb-8">
+            <h2 className="sr-only">Selected Subject Subjects</h2>
+            <SubjectList subjects={[{ ...questions[0].subject, id: String(questions[0].subject.id) }]} selected={Number(id)} />
+          </section>
+          <section>
+            <h2 className="sr-only">Betting Form</h2>
+            <BetForm subjects={[{ ...questions[0].subject, id: String(questions[0].subject.id) }]} questionsBySubject={questionsOnSubject} />
+          </section>
+        </>
+      ) : (
+        <div>No questions available.</div>
+      )}
     </main>
   );
 }

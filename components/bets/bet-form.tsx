@@ -1,6 +1,6 @@
 "use client";
 
-import type React from "react";
+import React from "react";
 
 import { useMemo, useState } from "react";
 import {
@@ -40,20 +40,31 @@ export default function BetForm({
   subjects: Subject[];
   questionsBySubject: QuestionMap;
 }) {
+  // const [searchParams, setSearchParams] = useState<URLSearchParams | null>(null);
   const [subjectId, setSubjectId] = useState<string>(subjects[0]?.id ?? "");
-  const [questionId, setQuestionId] = useState<string>("");
+  const [questionId, setQuestionId] = useState<string>("7");
   const [amount, setAmount] = useState<string>("");
   const [specifySet, setSpecifySet] = useState<boolean>(false);
   const [setId, setSetId] = useState<string>("");
+
+  // React.useEffect(() => {
+  //   if (typeof window !== "undefined") {
+  //     const params = new URLSearchParams(window.location.search);
+  //     setSearchParams(params);
+  //     setQuestionId(params.get("questionId") ?? "");
+  //   }
+  // }, []);
   const [submittedMsg, setSubmittedMsg] = useState<string>("");
   const [errorMsg, setErrorMsg] = useState<string>("");
+
+  const [open, setOpen] = useState(false);
 
   // Base payout multiplier is 2x; specifying the set doubles it to 4x
   const payoutMultiplier = specifySet ? 4 : 2;
   const numericAmount = Number.parseFloat(amount || "0");
-  const potentialReturn = Number.isFinite(numericAmount)
-    ? numericAmount * payoutMultiplier
-    : 0;
+  // const potentialReturn = Number.isFinite(numericAmount)
+  //   ? numericAmount * payoutMultiplier
+  //   : 0;
 
   // Get questions for the selected subject
   const questions = useMemo(
@@ -95,7 +106,7 @@ export default function BetForm({
     const setLabel = specifySet
       ? SET_OPTIONS.find((s) => s.id === setId)?.label
       : undefined;
-console.log(questionId)
+    console.log(questionId);
     fetch("/api/general/bets", {
       method: "POST",
       body: JSON.stringify({
@@ -133,6 +144,7 @@ console.log(questionId)
     // setSpecifySet(false)
     // setSetId("")
   }
+  console.log(questions);
 
   return (
     <Card aria-labelledby="bet-form-title">
@@ -168,7 +180,7 @@ console.log(questionId)
 
             <div className="grid gap-2">
               <Label htmlFor="question">Question</Label>
-              <Select
+                            <Select
                 value={questionId}
                 onValueChange={(v) => setQuestionId(v)}
                 disabled={!subjectId || questions.length === 0}
