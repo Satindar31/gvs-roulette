@@ -7,7 +7,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 type Subject = { id: string; name: string }
 
 export default function SubjectList({ subjects, selected }: { subjects: Subject[]; selected: number }) {
-  console.log(selected);
   const [expanded, setExpanded] = useState(true)
   return (
     <Card aria-labelledby="subjects-title">

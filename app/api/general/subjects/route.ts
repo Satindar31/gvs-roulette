@@ -51,7 +51,7 @@ export async function POST(req: Request) {
         },
       },
     });
-    return new NextResponse(JSON.stringify(updatedUser), { status: 201 });
+    return new NextResponse(JSON.stringify(updatedUser), { status: 200 });
   } catch (err) {
     return new NextResponse(
       JSON.stringify({ error: "Failed to update user" }),

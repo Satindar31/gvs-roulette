@@ -1,86 +1,131 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useMemo, useState } from "react"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Checkbox } from "@/components/ui/checkbox"
-import { cn } from "@/lib/utils"
+import { useMemo, useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { cn } from "@/lib/utils";
 
-type Subject = { id: string; name: string }
-type QuestionMap = Record<string, { id: string; label: string }[]>
+type Subject = { id: string; name: string };
+type QuestionMap = Record<string, { id: string; label: string }[]>;
 
 const SET_OPTIONS = [
   { id: "A", label: "Set 1" },
   { id: "B", label: "Set 2" },
-//   { id: "C", label: "Set C" },
-//   { id: "D", label: "Set D" },
-]
+  //   { id: "C", label: "Set C" },
+  //   { id: "D", label: "Set D" },
+];
 
 export default function BetForm({
   subjects,
   questionsBySubject,
 }: {
-  subjects: Subject[]
-  questionsBySubject: QuestionMap
+  subjects: Subject[];
+  questionsBySubject: QuestionMap;
 }) {
-  const [subjectId, setSubjectId] = useState<string>(subjects[0]?.id ?? "")
-  const [questionId, setQuestionId] = useState<string>("")
-  const [amount, setAmount] = useState<string>("")
-  const [specifySet, setSpecifySet] = useState<boolean>(false)
-  const [setId, setSetId] = useState<string>("")
-  const [submittedMsg, setSubmittedMsg] = useState<string>("")
-  const [errorMsg, setErrorMsg] = useState<string>("")
+  const [subjectId, setSubjectId] = useState<string>(subjects[0]?.id ?? "");
+  const [questionId, setQuestionId] = useState<string>("");
+  const [amount, setAmount] = useState<string>("");
+  const [specifySet, setSpecifySet] = useState<boolean>(false);
+  const [setId, setSetId] = useState<string>("");
+  const [submittedMsg, setSubmittedMsg] = useState<string>("");
+  const [errorMsg, setErrorMsg] = useState<string>("");
 
-  const questions = useMemo(() => {
-    return questionsBySubject[subjectId] ?? []
-  }, [subjectId, questionsBySubject])
+  // Base payout multiplier is 2x; specifying the set doubles it to 4x
+  const payoutMultiplier = specifySet ? 4 : 2;
+  const numericAmount = Number.parseFloat(amount || "0");
+  const potentialReturn = Number.isFinite(numericAmount)
+    ? numericAmount * payoutMultiplier
+    : 0;
 
-  // Base payout multiplier is 1x; specifying the set doubles it to 2x
-  const payoutMultiplier = specifySet ? 4 : 2
-  const numericAmount = Number.parseFloat(amount || "0")
-  const potentialReturn = Number.isFinite(numericAmount) ? numericAmount * payoutMultiplier : 0
+  // Get questions for the selected subject
+  const questions = useMemo(
+    () => questionsBySubject[subjects[0].name] ?? [],
+    [questionsBySubject, subjects]
+  );
 
   function resetMessages() {
-    setSubmittedMsg("")
-    setErrorMsg("")
+    setSubmittedMsg("");
+    setErrorMsg("");
   }
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    resetMessages()
+    e.preventDefault();
+    resetMessages();
 
     if (!subjectId) {
-      setErrorMsg("Please select a subject.")
-      return
+      setErrorMsg("Please select a subject.");
+      return;
     }
     if (!questionId) {
-      setErrorMsg("Please select a question to bet on.")
-      return
+      setErrorMsg("Please select a question to bet on.");
+      return;
     }
     if (!amount || Number.isNaN(numericAmount) || numericAmount <= 0) {
-      setErrorMsg("Please enter a valid amount greater than 0.")
-      return
+      setErrorMsg("Please enter a valid amount greater than 0.");
+      return;
     }
     if (specifySet && !setId) {
-      setErrorMsg("Please choose a set or uncheck 'Specify set' to continue.")
-      return
+      setErrorMsg("Please choose a set or uncheck 'Specify set' to continue.");
+      return;
     }
 
     // Simulate submission (replace with server action or API call)
-    const subjectName = subjects.find((s) => s.id === subjectId)?.name ?? subjectId
-    const questionLabel = questions.find((q) => q.id === questionId)?.label ?? questionId
-    const setLabel = specifySet ? SET_OPTIONS.find((s) => s.id === setId)?.label : undefined
-
-    setSubmittedMsg(
-      `Bet placed: ${subjectName} • ${questionLabel} • Amount ${numericAmount.toFixed(
-        2,
-      )} • Multiplier ${payoutMultiplier}x${setLabel ? " • " + setLabel : ""}`,
-    )
+    const subjectName =
+      subjects.find((s) => s.id === subjectId)?.name ?? subjectId;
+    const questionLabel =
+      questions.find((q) => q.id === questionId)?.label ?? questionId;
+    const setLabel = specifySet
+      ? SET_OPTIONS.find((s) => s.id === setId)?.label
+      : undefined;
+console.log(questionId)
+    fetch("/api/general/bets", {
+      method: "POST",
+      body: JSON.stringify({
+        subjectId,
+        questionId,
+        amount: numericAmount,
+        specifySet,
+        set: setId,
+      }),
+    })
+      .then((res) => {
+        if (res.ok) {
+          setSubmittedMsg(
+            `Bet placed: ${subjectName} • ${questionLabel} • Amount ${numericAmount.toFixed(
+              2
+            )} • Multiplier ${payoutMultiplier}x${
+              setLabel ? " • " + setLabel : ""
+            }`
+          );
+          return res.json();
+        } else {
+          throw new Error("Failed to place bet. Please try again.");
+        }
+      })
+      .then((data) => {
+        console.log("Bet placed successfully:", data);
+      })
+      .catch((error) => {
+        console.error("Error placing bet:", error);
+      });
 
     // Optionally clear form
     // setAmount("")
@@ -104,8 +149,8 @@ export default function BetForm({
               <Select
                 value={subjectId}
                 onValueChange={(v) => {
-                  setSubjectId(v)
-                  setQuestionId("")
+                  setSubjectId(v);
+                  setQuestionId("");
                 }}
               >
                 <SelectTrigger id="subject" aria-label="Subject">
@@ -129,7 +174,11 @@ export default function BetForm({
                 disabled={!subjectId || questions.length === 0}
               >
                 <SelectTrigger id="question" aria-label="Question">
-                  <SelectValue placeholder={subjectId ? "Select question" : "Select subject first"} />
+                  <SelectValue
+                    placeholder={
+                      subjectId ? "Select question" : "Select subject first"
+                    }
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   {questions.map((q) => (
@@ -166,9 +215,9 @@ export default function BetForm({
                 id="specify-set"
                 checked={specifySet}
                 onCheckedChange={(v) => {
-                  const checked = Boolean(v)
-                  setSpecifySet(checked)
-                  if (!checked) setSetId("")
+                  const checked = Boolean(v);
+                  setSpecifySet(checked);
+                  if (!checked) setSetId("");
                 }}
                 aria-describedby="set-help"
               />
@@ -177,9 +226,18 @@ export default function BetForm({
               </Label>
             </div>
 
-            <div className={cn("grid gap-2 max-w-sm transition-opacity", specifySet ? "opacity-100" : "opacity-50")}>
+            <div
+              className={cn(
+                "grid gap-2 max-w-sm transition-opacity",
+                specifySet ? "opacity-100" : "opacity-50"
+              )}
+            >
               <Label htmlFor="set">Question Paper Set</Label>
-              <Select value={setId} onValueChange={setSetId} disabled={!specifySet}>
+              <Select
+                value={setId}
+                onValueChange={setSetId}
+                disabled={!specifySet}
+              >
                 <SelectTrigger id="set" aria-label="Question paper set">
                   <SelectValue placeholder="Choose a set (optional)" />
                 </SelectTrigger>
@@ -199,12 +257,17 @@ export default function BetForm({
 
           <div className="grid gap-1">
             <p className="text-sm">
-              Payout multiplier: <span className="font-medium">{payoutMultiplier}x</span>
+              Payout multiplier:{" "}
+              <span className="font-medium">{payoutMultiplier}x</span>
             </p>
             <p className="text-sm text-muted-foreground">
               Potential return:{" "}
               <span className="font-medium text-foreground">
-                {Math.floor(isFinite(numericAmount) ? (numericAmount * (specifySet ? 4 : 2)) : 0)}
+                {Math.floor(
+                  isFinite(numericAmount)
+                    ? numericAmount * (specifySet ? 4 : 2)
+                    : 0
+                )}
               </span>
             </p>
           </div>
@@ -226,5 +289,5 @@ export default function BetForm({
         </CardFooter>
       </form>
     </Card>
-  )
+  );
 }

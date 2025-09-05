@@ -1,10 +1,9 @@
 import { Button } from "@/components/ui/button";
-import { getBetsBySubjectID } from "@/hooks/getBets";
+import { getQuestionsBySubjectID } from "@/hooks/getBets";
 import Link from "next/link";
 
 export default async function SubjectBetsGrid({ id }: { id: string }) {
-  const data = await getBetsBySubjectID(Number(id));
-  console.log(data.length)
+  const data = await getQuestionsBySubjectID(Number(id));
   return (
     <div className="w-full">
     <div className="grid grid-cols-4 grid-rows-3 gap-4">
@@ -12,10 +11,11 @@ export default async function SubjectBetsGrid({ id }: { id: string }) {
       data.slice(0, 11).map((bet) => (
         <div
         key={bet.id}
-        className="border rounded-lg p-4 flex flex-col justify-between"
+        className="border rounded-lg p-4 flex flex-col justify-between mt-4"
         >
-        <h3 className="font-bold">{bet.question.text}</h3>
-        <p>Subject: {bet.question.subject.name}</p>
+        <h3 className="font-bold">{bet.text}</h3>
+        <p>Subject: {bet.subject.name}</p>
+        <p>Bets: {bet.Bet.length}</p>
         </div>
       ))}
       {data.length > 0 && (

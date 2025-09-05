@@ -1,37 +1,27 @@
 import { prisma } from "@/prisma";
-import { Bet } from "@/types/bets";
+import { Question } from "@prisma/client";
 
 /**
- * Fetch bets by subject ID.
- * @param subjectID - The ID of the subject to fetch bets for.
- * @returns An array of bets associated with the given subject ID.
+ * Fetch questions by subject ID.
+ * @param subjectID - The ID of the subject to fetch questions for.
+ * @returns An array of questions associated with the given subject ID.
  */
-export async function getBetsBySubjectID(subjectID: number): Promise<Bet[]> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function getQuestionsBySubjectID(subjectID: number): Promise<any[]> {
   try {
-    const bets = await prisma.bet.findMany({
+    const questions = await prisma.question.findMany({
       where: {
-        question: {
-          subject: {
-            id: Number(subjectID),
-          },
-        },
+        subjectId: subjectID,
       },
       include: {
-        question: {
-          include: {
-            subject: true,
-          },
-        },
-      },
-      cacheStrategy: {
-        ttl: 60,
-        swr: 30,
-      },
-    });
+        subject: true,
+        Bet: true,
+      }
+    })
 
-    return bets;
+    return questions
   } catch (error) {
-    console.error("Error fetching bets:", error);
+    console.error("Error fetching questions:", error);
     return [];
   }
 }

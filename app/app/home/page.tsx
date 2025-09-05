@@ -17,10 +17,6 @@ import { SessionProvider } from "next-auth/react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-type UserWithDob = {
-  name: string;
-  dob?: string | null;
-};
 
 export default async function Home() {
   const session = await auth()
